@@ -21,7 +21,7 @@ interface SettingsProps {
 type TabType = 'chat-history' | 'providers' | 'features' | 'debug';
 
 // Providers that support base URL configuration
-const URL_CONFIGURABLE_PROVIDERS = ['Ollama', 'LMStudio', 'OpenAILike'];
+const URL_CONFIGURABLE_PROVIDERS = ['Ollama', 'LMStudio', 'OpenAILike', 'AzureOpenAI'];
 
 export const SettingsWindow = ({ open, onClose }: SettingsProps) => {
   const navigate = useNavigate();

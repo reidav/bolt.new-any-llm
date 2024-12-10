@@ -214,7 +214,11 @@ const PROVIDER_LIST: ProviderInfo[] = [
     ],
     getApiKeyLink: 'https://huggingface.co/settings/tokens',
   },
-
+  {
+    name: 'AzureOpenAI',
+    staticModels: [],
+    getDynamicModels: getAzureOpenAIModels,
+  },
   {
     name: 'OpenAI',
     staticModels: [
@@ -423,6 +427,32 @@ async function getOpenAILikeModels(): Promise<ModelInfo[]> {
   }
 }
 
+async function getAzureOpenAIModels(): Promise<ModelInfo[]> {
+  try {
+    const baseUrl = import.meta.env.AZURE_OPENAI_API_BASE_URL || '';
+
+    if (!baseUrl) {
+      return [];
+    }
+
+    const apiKey = import.meta.env.AZURE_OPENAI_API_KEY;
+    const response = await fetch(`${baseUrl}/openai/deployments?api-version=2023-03-15-preview`, {
+      headers: {
+        'api-key': apiKey,
+      },
+    });
+    const res = (await response.json()) as any;
+
+    return res.data.map((model: any) => ({
+      name: model.id,
+      label: model.id,
+      provider: 'AzureOpenAI',
+    }));
+  } catch {
+    return [];
+  }
+}
+
 type OpenRouterModelsResponse = {
   data: {
     name: string;
@@ -511,6 +541,7 @@ export {
   getOllamaModels,
   getOpenAILikeModels,
   getLMStudioModels,
+  getAzureOpenAIModels,
   initializeModelList,
   getOpenRouterModels,
   PROVIDER_LIST,

@@ -21,6 +21,8 @@ export function getAPIKey(cloudflareEnv: Env, provider: string, userApiKeys?: Re
       return env.ANTHROPIC_API_KEY || cloudflareEnv.ANTHROPIC_API_KEY;
     case 'OpenAI':
       return env.OPENAI_API_KEY || cloudflareEnv.OPENAI_API_KEY;
+    case 'AzureOpenAI':
+      return env.AZURE_OPENAI_API_KEY || cloudflareEnv.AZURE_OPENAI_API_KEY;
     case 'Google':
       return env.GOOGLE_GENERATIVE_AI_API_KEY || cloudflareEnv.GOOGLE_GENERATIVE_AI_API_KEY;
     case 'Groq':
@@ -41,8 +43,6 @@ export function getAPIKey(cloudflareEnv: Env, provider: string, userApiKeys?: Re
       return env.XAI_API_KEY || cloudflareEnv.XAI_API_KEY;
     case 'Cohere':
       return env.COHERE_API_KEY;
-    case 'AzureOpenAI':
-      return env.AZURE_OPENAI_API_KEY;
     default:
       return '';
   }
@@ -54,6 +54,8 @@ export function getBaseURL(cloudflareEnv: Env, provider: string) {
       return env.TOGETHER_API_BASE_URL || cloudflareEnv.TOGETHER_API_BASE_URL || 'https://api.together.xyz/v1';
     case 'OpenAILike':
       return env.OPENAI_LIKE_API_BASE_URL || cloudflareEnv.OPENAI_LIKE_API_BASE_URL;
+    case 'AzureOpenAI':
+      return env.AZURE_OPENAI_API_BASE_URL || cloudflareEnv.AZURE_OPENAI_API_BASE_URL;
     case 'LMStudio':
       return env.LMSTUDIO_API_BASE_URL || cloudflareEnv.LMSTUDIO_API_BASE_URL || 'http://localhost:1234';
     case 'Ollama': {

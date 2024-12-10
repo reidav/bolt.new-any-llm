@@ -10,6 +10,7 @@ import { ollama } from 'ollama-ai-provider';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { createMistral } from '@ai-sdk/mistral';
 import { createCohere } from '@ai-sdk/cohere';
+import { createAzure } from '@ai-sdk/azure';
 import type { LanguageModelV1 } from 'ai';
 
 export const DEFAULT_NUM_CTX = process.env.DEFAULT_NUM_CTX ? parseInt(process.env.DEFAULT_NUM_CTX, 10) : 32768;
@@ -46,6 +47,27 @@ export function getOpenAIModel(apiKey: OptionalApiKey, model: string) {
   });
 
   return openai(model);
+}
+
+export function getAzureOpenAIModel(baseURL: string, apiKey: OptionalApiKey, model: string) {
+  function extractResourceName(url: string): string | undefined {
+    const regex = /^https:\/\/([^\.]+)\./;
+    const match = url.match(regex);
+
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return undefined; // or throw an error, depending on how you want to handle this case
+    }
+  }
+
+  const resourceName = extractResourceName(baseURL);
+  const azureOpenAI = createAzure({
+    apiKey,
+    resourceName,
+  });
+
+  return azureOpenAI(model);
 }
 
 export function getMistralModel(apiKey: OptionalApiKey, model: string) {
@@ -141,6 +163,8 @@ export function getModel(provider: string, model: string, env: Env, apiKeys?: Re
       return getAnthropicModel(apiKey, model);
     case 'OpenAI':
       return getOpenAIModel(apiKey, model);
+    case 'AzureOpenAI':
+      return getAzureOpenAIModel(baseURL, apiKey, model);
     case 'Groq':
       return getGroqModel(apiKey, model);
     case 'HuggingFace':
